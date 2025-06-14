@@ -64,16 +64,18 @@ dependencies {
     implementation(libs.firebase.admin)
     implementation( libs.jackson.module.kotlin)
     // Firestore
-    implementation("com.google.firebase:firebase-firestore-ktx")
+    implementation(libs.firebase.firestore.ktx)
 
 // Coroutines
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
+    implementation(libs.kotlinx.coroutines.core)
+    implementation(libs.kotlinx.coroutines.android)
 
 // Firestore + Kotlin Coroutines interop
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.7.3")
-    implementation("androidx.compose.material:material-icons-extended:1.6.1")
+    implementation(libs.kotlinx.coroutines.play.services)
+    implementation("androidx.compose.material:material-icons-extended:1.7.8")
 
+    implementation("androidx.compose.runtime:runtime:1.8.2")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.9.1")
 
 
 }

@@ -1,26 +1,37 @@
-package com.oscar.apihospitalfirebase.ui.theme
+package com.oscar.apihospitalfirebase.ui
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ExitToApp
+import androidx.compose.material.icons.automirrored.filled.Help
+import androidx.compose.material.icons.automirrored.filled.Message
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.oscar.apihospitalfirebase.viewmodel.MedicoViewModel
+import com.oscar.apihospitalfirebase.model.Medico
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DashboardScreen() {
+fun DashboardScreen(medicoViewModel: MedicoViewModel = viewModel()) {
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
+    val medicos = remember { mutableStateListOf<Medico>() }
+
+    LaunchedEffect(Unit) {
+        medicoViewModel.obtenerMedicos { lista ->
+            medicos.clear()
+            medicos.addAll(lista)
+        }
+    }
 
     ModalNavigationDrawer(
         drawerState = drawerState,
@@ -32,13 +43,13 @@ fun DashboardScreen() {
                     fontSize = 22.sp
                 )
                 NavigationDrawerItem(
-                    icon = { Icon(Icons.Default.Message, contentDescription = null) },
+                    icon = { Icon(Icons.AutoMirrored.Filled.Message, contentDescription = null) },
                     label = { Text("Mensajes") },
                     selected = false,
                     onClick = { /* TODO */ }
                 )
                 NavigationDrawerItem(
-                    icon = { Icon(Icons.Default.Help, contentDescription = null) },
+                    icon = { Icon(Icons.AutoMirrored.Filled.Help, contentDescription = null) },
                     label = { Text("Ayuda") },
                     selected = false,
                     onClick = { /* TODO */ }
@@ -56,7 +67,7 @@ fun DashboardScreen() {
                     onClick = { /* TODO */ }
                 )
                 NavigationDrawerItem(
-                    icon = { Icon(Icons.Default.ExitToApp, contentDescription = null) },
+                    icon = { Icon(Icons.AutoMirrored.Filled.ExitToApp, contentDescription = null) },
                     label = { Text("Sign Out") },
                     selected = false,
                     onClick = { /* TODO */ }
@@ -80,58 +91,28 @@ fun DashboardScreen() {
                     )
                 },
                 content = { innerPadding ->
-                    Box(
+                    Column(
                         modifier = Modifier
                             .fillMaxSize()
                             .padding(innerPadding)
-                            .background(Color(0xFFF2F2F2))
+                            .padding(16.dp)
                     ) {
-                        Column(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .padding(16.dp)
-                        ) {
-                            Text("Medicinas", fontSize = 20.sp)
-                            Box(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .height(100.dp)
-                                    .padding(vertical = 8.dp)
-                                    .background(Color(0xFF2196F3), RoundedCornerShape(10.dp))
-                                    .clickable { /* Navegar a Medicinas */ },
-                                contentAlignment = Alignment.Center
-                            ) {
-                                Text("Ver tus medicinas", color = Color.White, fontSize = 16.sp)
-                            }
+                        Text("Médicos registrados", fontSize = 20.sp)
 
-                            Spacer(modifier = Modifier.height(16.dp))
-
-                            Text("Historial", fontSize = 20.sp)
-                            Box(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .height(100.dp)
-                                    .padding(vertical = 8.dp)
-                                    .background(Color(0xFF4CAF50), RoundedCornerShape(10.dp))
-                                    .clickable { /* Navegar a Historial */ },
-                                contentAlignment = Alignment.Center
-                            ) {
-                                Text("Tu historial clínico", color = Color.White, fontSize = 16.sp)
-                            }
-
-                            Spacer(modifier = Modifier.height(16.dp))
-
-                            Text("Calendario", fontSize = 20.sp)
-                            Box(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .height(100.dp)
-                                    .padding(vertical = 8.dp)
-                                    .background(Color(0xFFFF9800), RoundedCornerShape(10.dp))
-                                    .clickable { /* Navegar a Calendario */ },
-                                contentAlignment = Alignment.Center
-                            ) {
-                                Text("Ver citas", color = Color.White, fontSize = 16.sp)
+                        LazyColumn(modifier = Modifier.fillMaxWidth()) {
+                            items(medicos) { medico ->
+                                Card(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(vertical = 8.dp),
+                                    colors = CardDefaults.cardColors(containerColor = Color(0xFFE3F2FD))
+                                ) {
+                                    Column(modifier = Modifier.padding(16.dp)) {
+                                        Text("Nombre: ${medico.nombre}", fontSize = 16.sp)
+                                        Text("Especialidad: ${medico.especialidad}", fontSize = 14.sp)
+                                        Text("Teléfono: ${medico.telefono}", fontSize = 14.sp)
+                                    }
+                                }
                             }
                         }
                     }
