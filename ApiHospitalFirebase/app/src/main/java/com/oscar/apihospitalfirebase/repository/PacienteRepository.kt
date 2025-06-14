@@ -1,29 +1,26 @@
 package com.oscar.apihospitalfirebase.repository
 
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
+import com.google.firebase.firestore.FirebaseFirestore
 import com.oscar.apihospitalfirebase.model.Paciente
 import kotlinx.coroutines.tasks.await
 
 class PacienteRepository {
-
-    private val db = Firebase.firestore
+    private val db = FirebaseFirestore.getInstance()
     private val collection = db.collection("pacientes")
 
+    suspend fun guardarPaciente(paciente: Paciente) {
+        paciente.id?.let {
+            collection.document(it).set(paciente).await()
+        } ?: run {
+            collection.add(paciente).await()
+        }
+    }
+
     suspend fun obtenerTodos(): List<Paciente> {
-        val snapshot = collection.get().await()
-        return snapshot.toObjects(Paciente::class.java)
+        return collection.get().await().toObjects(Paciente::class.java)
     }
 
     suspend fun obtenerPorId(id: String): Paciente? {
-        val doc = collection.document(id).get().await()
-        return doc.toObject(Paciente::class.java)
-    }
-
-    suspend fun guardar(paciente: Paciente) {
-        // Si el ID está vacío, Firebase genera uno nuevo
-        val id = if (paciente.id.isEmpty()) collection.document().id else paciente.id
-        val pacienteConId = paciente.copy(id = id)
-        collection.document(id).set(pacienteConId).await()
+        return collection.document(id).get().await().toObject(Paciente::class.java)
     }
 }
