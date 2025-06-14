@@ -72,10 +72,13 @@ dependencies {
 
 // Firestore + Kotlin Coroutines interop
     implementation(libs.kotlinx.coroutines.play.services)
-    implementation("androidx.compose.material:material-icons-extended:1.7.8")
+    implementation(libs.androidx.material.icons.extended)
 
-    implementation("androidx.compose.runtime:runtime:1.8.2")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.9.1")
+    implementation(libs.androidx.runtime)
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
+    implementation (libs.androidx.material)
 
+// Material 3 (si la estás usando)
+    implementation (libs.material3)
 
 }

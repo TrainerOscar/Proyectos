@@ -20,6 +20,7 @@ import com.oscar.apihospitalfirebase.viewmodel.MedicoViewModel
 import com.oscar.apihospitalfirebase.model.Medico
 import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DashboardScreen(medicoViewModel: MedicoViewModel = viewModel()) {
     val drawerState = rememberDrawerState(DrawerValue.Closed)
