@@ -15,15 +15,29 @@ class PacienteViewModel : ViewModel() {
         }
     }
 
+    fun actualizarPaciente(paciente: Paciente) {
+        viewModelScope.launch {
+            pacienteRepository.actualizarPaciente(paciente)
+        }
+    }
+
+    fun eliminarPaciente(id: String) {
+        viewModelScope.launch {
+            pacienteRepository.eliminarPaciente(id)
+        }
+    }
+
     fun obtenerPacientes(onResult: (List<Paciente>) -> Unit) {
         viewModelScope.launch {
-            onResult(pacienteRepository.obtenerTodos())
+            val lista = pacienteRepository.obtenerTodos()
+            onResult(lista)
         }
     }
 
     fun obtenerPorId(id: String, onResult: (Paciente?) -> Unit) {
         viewModelScope.launch {
-            onResult(pacienteRepository.obtenerPorId(id))
+            val paciente = pacienteRepository.obtenerPorId(id)
+            onResult(paciente)
         }
     }
 }

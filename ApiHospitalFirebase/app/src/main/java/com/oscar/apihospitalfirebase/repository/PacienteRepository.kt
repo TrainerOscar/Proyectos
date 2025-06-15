@@ -6,21 +6,27 @@ import kotlinx.coroutines.tasks.await
 
 class PacienteRepository {
     private val db = FirebaseFirestore.getInstance()
-    private val collection = db.collection("pacientes")
+    private val coleccion = db.collection("pacientes")
 
     suspend fun guardarPaciente(paciente: Paciente) {
-        paciente.id?.let {
-            collection.document(it).set(paciente).await()
-        } ?: run {
-            collection.add(paciente).await()
-        }
+        coleccion.document(paciente.id).set(paciente).await()
     }
 
     suspend fun obtenerTodos(): List<Paciente> {
-        return collection.get().await().toObjects(Paciente::class.java)
+        val snapshot = coleccion.get().await()
+        return snapshot.toObjects(Paciente::class.java)
     }
 
     suspend fun obtenerPorId(id: String): Paciente? {
-        return collection.document(id).get().await().toObject(Paciente::class.java)
+        val doc = coleccion.document(id).get().await()
+        return doc.toObject(Paciente::class.java)
+    }
+
+    suspend fun actualizarPaciente(paciente: Paciente) {
+        coleccion.document(paciente.id).set(paciente).await()
+    }
+
+    suspend fun eliminarPaciente(id: String) {
+        coleccion.document(id).delete().await()
     }
 }
