@@ -6,25 +6,27 @@ import kotlinx.coroutines.tasks.await
 
 class CitaRepository {
     private val db = FirebaseFirestore.getInstance()
-    private val collection = db.collection("citas")
+    private val coleccion = db.collection("citas")
 
     suspend fun guardarCita(cita: Cita) {
-        cita.id?.let {
-            collection.document(it).set(cita).await()
-        } ?: run {
-            collection.add(cita).await()
-        }
+        coleccion.document(cita.id).set(cita).await()
     }
 
     suspend fun obtenerTodas(): List<Cita> {
-        return collection.get().await().toObjects(Cita::class.java)
+        val snapshot = coleccion.get().await()
+        return snapshot.toObjects(Cita::class.java)
     }
 
     suspend fun obtenerPorId(id: String): Cita? {
-        return collection.document(id).get().await().toObject(Cita::class.java)
+        val doc = coleccion.document(id).get().await()
+        return doc.toObject(Cita::class.java)
     }
 
-    suspend fun obtenerCitasPorMedico(medicoId: String): List<Cita> {
-        return collection.whereEqualTo("medicoId", medicoId).get().await().toObjects(Cita::class.java)
+    suspend fun actualizarCita(cita: Cita) {
+        coleccion.document(cita.id).set(cita).await()
+    }
+
+    suspend fun eliminarCita(id: String) {
+        coleccion.document(id).delete().await()
     }
 }

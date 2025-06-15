@@ -17,19 +17,20 @@ class CitaViewModel : ViewModel() {
 
     fun obtenerCitas(onResult: (List<Cita>) -> Unit) {
         viewModelScope.launch {
-            onResult(citaRepository.obtenerTodas())
+            val lista = citaRepository.obtenerTodas()
+            onResult(lista)
         }
     }
 
-    fun obtenerPorId(id: String, onResult: (Cita?) -> Unit) {
+    fun actualizarCita(cita: Cita) {
         viewModelScope.launch {
-            onResult(citaRepository.obtenerPorId(id))
+            citaRepository.actualizarCita(cita)
         }
     }
 
-    fun obtenerCitasPorMedico(medicoId: String, onResult: (List<Cita>) -> Unit) {
+    fun eliminarCita(id: String) {
         viewModelScope.launch {
-            onResult(citaRepository.obtenerCitasPorMedico(medicoId))
+            citaRepository.eliminarCita(id)
         }
     }
 }
