@@ -37,35 +37,6 @@
     },
     {
       "client_info": {
-        "mobilesdk_app_id": "1:991724478350:android:e95d11c16d7cc6f027cedf",
-        "android_client_info": {
-          "package_name": "com.oscar.apihospitalfirebase"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "991724478350-ipihgotigaeejqase5q3e18ee8o16226.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyDXhJR7_MSzfvRg5BxWFV8qlmuTPFP04QU"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "991724478350-ipihgotigaeejqase5q3e18ee8o16226.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
-        }
-      }
-    },
-    {
-      "client_info": {
         "mobilesdk_app_id": "1:991724478350:android:6b43f122e762f6e227cedf",
         "android_client_info": {
           "package_name": "com.oscar.firebase.MainActivity"

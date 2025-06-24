@@ -1,23 +1,19 @@
 package com.oscar.apihospitalfirebase
-// ApiHospitalApplication.kt
 
-import com.google.auth.oauth2.GoogleCredentials
+import android.app.Application
 import com.google.firebase.FirebaseApp
-import com.google.firebase.FirebaseOptions
-import org.springframework.boot.autoconfigure.SpringBootApplication
-import org.springframework.boot.runApplication
-import java.io.FileInputStream
+import com.google.firebase.firestore.FirebaseFirestore
+import android.util.Log
 
-@SpringBootApplication
-class ApiHospitalApplication
-
-fun main(args: Array<String>) {
-    val serviceAccount = FileInputStream("ruta-a-tu-archivo-serviceAccountKey.json")
-    val options = FirebaseOptions.builder()
-        .setCredentials(GoogleCredentials.fromStream(serviceAccount))
-        .setDatabaseUrl("https://TU_PROYECTO.firebaseio.com")
-        .build()
-
-    FirebaseApp.initializeApp(options)
-    runApplication<ApiHospitalApplication>(*args)
+class ApiHospitalApplication : Application() {
+    override fun onCreate() {
+        super.onCreate()
+        try {
+            FirebaseApp.initializeApp(this)
+            FirebaseFirestore.getInstance() // Opcional: forzar inicialización
+            Log.d("ApiHospitalApp", "Firebase inicializado correctamente.")
+        } catch (e: Exception) {
+            Log.e("ApiHospitalApp", "Error al inicializar Firebase", e)
+        }
+    }
 }

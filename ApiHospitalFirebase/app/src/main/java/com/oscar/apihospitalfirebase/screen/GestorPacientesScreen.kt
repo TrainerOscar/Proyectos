@@ -1,4 +1,4 @@
-package com.oscar.apihospitalfirebase.screen
+package com.oscar.apihospitalfirebase.ui
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -7,81 +7,165 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.oscar.apihospitalfirebase.model.Paciente
-import com.oscar.apihospitalfirebase.viewmodel.PacienteViewModel
+
+@OptIn(ExperimentalMaterial3Api::class)
+
 
 @Composable
-fun GestorPacientesScreen(viewModel: PacienteViewModel = viewModel()) {
-    var pacientes by remember { mutableStateOf(listOf<Paciente>()) }
-    var showDialog by remember { mutableStateOf(false) }
-    var pacienteSeleccionado by remember { mutableStateOf<Paciente?>(null) }
+fun FormularioPacienteDialog(
+    paciente: Paciente?,
+    onDismiss: () -> Unit,
+    onGuardar: (Paciente) -> Unit
+) {
+    var nombre by remember { mutableStateOf(paciente?.nombre ?: "") }
+    var direccion by remember { mutableStateOf(paciente?.direccion ?: "") }
+    var direccion by remember { mutableStateOf(paciente?.direccion ?: "") }
+    var edad by remember { mutableStateOf(paciente?.edad?.toString() ?: "") }
+    var genero by remember { mutableStateOf(paciente?.genero ?: "") }
 
-    // Obtener pacientes
-    LaunchedEffect(Unit) {
-        viewModel.obtenerPacientes { pacientes = it }
-    }
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text(if (paciente == null) "Nuevo Paciente" else "Editar Paciente") },
+        text = {
+            Column(modifier = Modifier.fillMaxWidth()) {
+                OutlinedTextField(
+                    value = nombre,
+                    onValueChange = { nombre = it },
+                    label = { Text("Nombre") },
+                    modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp)
+                )
+                OutlinedTextField(
+                    value = edad,
+                    onValueChange = {
+                        edad = it.filter { ch -> ch.isDigit() }
+                    },
+                    label = { Text("Edad") },
+                    modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp),
+                    singleLine = true
+                )
+                OutlinedTextField(
+                    value = genero,
+                    onValueChange = { genero = it },
+                    label = { Text("Género") },
+                    modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp)
+                )
+                OutlinedTextField(
+                    value = direccion,
+                    onValueChange = { direccion = it },
+                    label = { Text("Direccion") },
+                    modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp)
+                )
 
-    Column(modifier = Modifier.padding(16.dp)) {
-        Text("Gestor de Pacientes", style = MaterialTheme.typography.headlineSmall)
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        Button(onClick = {
-            pacienteSeleccionado = null
-            showDialog = true
-        }) {
-            Text("Registrar nuevo paciente")
+            }
+        },
+        confirmButton = {
+            TextButton(onClick = {
+                if (nombre.isNotBlank() && edad.isNotBlank()) {
+                    val nuevoPaciente = Paciente(
+                        id = paciente?.id ?: System.currentTimeMillis().toString(),
+                        nombre = nombre,
+                        edad = edad.toInt(),
+                        genero = genero,
+                        direccion = direccion,
+                        telefono =
+                        motivo =
+                        fechaCita =
+                        horaCita =
+                    )
+                    onGuardar(nuevoPaciente)
+                }
+            }) {
+                Text("Guardar")
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text("Cancelar")
+            }
         }
+    )
+}
 
-        Spacer(modifier = Modifier.height(16.dp))
 
-        LazyColumn {
-            items(pacientes) { paciente ->
-                Card(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 4.dp),
-                    elevation = CardDefaults.cardElevation(4.dp)
-                ) {
-                    Column(modifier = Modifier.padding(12.dp)) {
-                        Text("Nombre: ${paciente.nombre}", style = MaterialTheme.typography.bodyLarge)
-                        Text("Edad: ${paciente.edad}", style = MaterialTheme.typography.bodyMedium)
-                        Text("Cita: ${paciente.fechaCita} a las ${paciente.horaCita}", style = MaterialTheme.typography.bodyMedium)
 
-                        Row(modifier = Modifier.padding(top = 8.dp)) {
-                            OutlinedButton(onClick = {
-                                pacienteSeleccionado = paciente
-                                showDialog = true
-                            }) {
-                                Text("Editar")
-                            }
-                            Spacer(modifier = Modifier.width(8.dp))
-                            OutlinedButton(onClick = {
-                                viewModel.eliminarPaciente(paciente.id)
-                                viewModel.obtenerPacientes { pacientes = it }
-                            }) {
-                                Text("Eliminar")
-                            }
-                        }
-                    }
+@Composable
+
+fun PacienteItem(
+    paciente: Paciente,
+    onEditar: (Paciente) -> Unit,
+    onEliminar: (Paciente) -> Unit
+) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(8.dp)
+    ) {
+        Row(
+            modifier = Modifier.padding(16.dp),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Text(paciente.nombre)
+            Row {
+                TextButton(onClick = { onEditar(paciente) }) {
+                    Text("Editar")
+                }
+                TextButton(onClick = { onEliminar(paciente) }) {
+                    Text("Eliminar")
                 }
             }
         }
     }
+}
 
-    if (showDialog) {
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun GestorPacientesScreen(
+    pacientes: List<Paciente>,
+    onGuardarPaciente: (Paciente) -> Unit,
+    onEliminarPaciente: (Paciente) -> Unit
+) {
+    var pacienteDialogAbierto by remember { mutableStateOf(false) }
+    var pacienteEditando by remember { mutableStateOf<Paciente?>(null) }
+
+    Scaffold(
+        topBar = {
+            TopAppBar(title = { Text("Gestor de Pacientes") })
+        },
+        floatingActionButton = {
+            FloatingActionButton(onClick = {
+                pacienteEditando = null
+                pacienteDialogAbierto = true
+            }) {
+                Text("+")
+            }
+        }
+    ) { padding ->
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(padding)
+        ) {
+            items(pacientes) { paciente ->
+                PacienteItem(
+                    paciente = paciente,
+                    onEditar = {
+                        pacienteEditando = it
+                        pacienteDialogAbierto = true
+                    },
+                    onEliminar = { onEliminarPaciente(it) }
+                )
+            }
+        }
+    }
+
+    if (pacienteDialogAbierto) {
         FormularioPacienteDialog(
-            paciente = pacienteSeleccionado,
-            onDismiss = { showDialog = false },
-            onSave = { pacienteNuevo ->
-                if (pacienteSeleccionado == null) {
-                    viewModel.guardarPaciente(pacienteNuevo)
-                } else {
-                    viewModel.actualizarPaciente(pacienteNuevo)
-                }
-                viewModel.obtenerPacientes { pacientes = it }
-                showDialog = false
+            paciente = pacienteEditando,
+            onDismiss = { pacienteDialogAbierto = false },
+            onGuardar = {
+                onGuardarPaciente(it)
+                pacienteDialogAbierto = false
             }
         )
     }

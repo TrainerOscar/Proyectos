@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "991724478350",
+    "project_id": "poosito-1a70d",
+    "storage_bucket": "poosito-1a70d.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:991724478350:android:2392776af4b49d4127cedf",
+        "android_client_info": {
+          "package_name": "com.oscar.a2docorte.MainActivity"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDXhJR7_MSzfvRg5BxWFV8qlmuTPFP04QU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

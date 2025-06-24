@@ -1,4 +1,4 @@
-package com.oscar.apihospitalfirebase.ui.citas
+package com.oscar.apihospitalfirebase.model
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
