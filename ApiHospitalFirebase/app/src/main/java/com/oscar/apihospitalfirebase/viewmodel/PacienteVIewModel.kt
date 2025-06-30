@@ -2,7 +2,6 @@ package com.oscar.apihospitalfirebase.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.oscar.apihospitalfirebase.model.Cita
 import com.oscar.apihospitalfirebase.model.Paciente
 import com.oscar.apihospitalfirebase.repository.PacienteRepository
 import kotlinx.coroutines.launch
@@ -10,13 +9,13 @@ import kotlinx.coroutines.launch
 class PacienteViewModel : ViewModel() {
     private val pacienteRepository = PacienteRepository()
 
-    fun guardarPaciente(paciente: Cita) {
+    fun guardarPaciente(paciente: Paciente) {
         viewModelScope.launch {
             pacienteRepository.guardarPaciente(paciente)
         }
     }
 
-    fun actualizarPaciente(paciente: Cita) {
+    fun actualizarPaciente(paciente: Paciente) {
         viewModelScope.launch {
             pacienteRepository.actualizarPaciente(paciente)
         }

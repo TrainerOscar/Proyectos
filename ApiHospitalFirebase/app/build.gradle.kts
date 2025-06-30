@@ -57,6 +57,8 @@ dependencies {
     implementation(libs.androidx.lifecycle.viewmodel.compose)
     implementation(libs.androidx.material.icons.extended)
     implementation(libs.material3)
+    implementation(libs.androidx.navigation.compose) // o la más reciente
+
 
     // Firebase BOM y Firestore
     implementation(platform("com.google.firebase:firebase-bom:33.15.0"))
