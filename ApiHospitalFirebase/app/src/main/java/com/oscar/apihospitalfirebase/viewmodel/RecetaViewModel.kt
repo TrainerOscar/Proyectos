@@ -1,9 +1,10 @@
 package com.oscar.apihospitalfirebase.viewmodel
 
+import Receta
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.oscar.apihospitalfirebase.model.Receta
+
 import com.oscar.apihospitalfirebase.repository.RecetaRepository
 import kotlinx.coroutines.launch
 
