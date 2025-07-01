@@ -1,32 +1,51 @@
 package com.oscar.apihospitalfirebase.repository
 
-import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ktx.getValue
 import com.oscar.apihospitalfirebase.model.Paciente
 import kotlinx.coroutines.tasks.await
 
 class PacienteRepository {
-    private val db = FirebaseFirestore.getInstance()
-    private val coleccion = db.collection("pacientes")
+    private val db = FirebaseDatabase.getInstance()
+    private val pacientesRef = db.getReference("pacientes")
 
+    // Guardar un nuevo paciente
     suspend fun guardarPaciente(paciente: Paciente) {
-        coleccion.document(paciente.id).set(paciente).await()
+        if (paciente.id == null) {
+            val nuevaRef = pacientesRef.push()
+            paciente.id = nuevaRef.key.toString()
+            nuevaRef.setValue(paciente).await()
+        } else {
+            pacientesRef.child(paciente.id!!).setValue(paciente).await()
+        }
     }
 
+    // Obtener todos los pacientes
     suspend fun obtenerTodos(): List<Paciente> {
-        val snapshot = coleccion.get().await()
-        return snapshot.toObjects(Paciente::class.java)
+        val snapshot = pacientesRef.get().await()
+        val lista = mutableListOf<Paciente>()
+        for (child in snapshot.children) {
+            val paciente = child.getValue(Paciente::class.java)
+            paciente?.let { lista.add(it) }
+        }
+        return lista
     }
 
+    // Obtener un paciente por ID
     suspend fun obtenerPorId(id: String): Paciente? {
-        val doc = coleccion.document(id).get().await()
-        return doc.toObject(Paciente::class.java)
+        val snapshot = pacientesRef.child(id).get().await()
+        return snapshot.getValue(Paciente::class.java)
     }
 
+    // Actualizar un paciente
     suspend fun actualizarPaciente(paciente: Paciente) {
-        coleccion.document(paciente.id).set(paciente).await()
+        paciente.id?.let {
+            pacientesRef.child(it).setValue(paciente).await()
+        }
     }
 
+    // Eliminar un paciente
     suspend fun eliminarPaciente(id: String) {
-        coleccion.document(id).delete().await()
+        pacientesRef.child(id).removeValue().await()
     }
 }

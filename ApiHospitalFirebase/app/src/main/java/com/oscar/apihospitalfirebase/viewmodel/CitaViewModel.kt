@@ -1,5 +1,6 @@
 package com.oscar.apihospitalfirebase.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.oscar.apihospitalfirebase.model.Cita
@@ -11,26 +12,46 @@ class CitaViewModel : ViewModel() {
 
     fun guardarCita(cita: Cita) {
         viewModelScope.launch {
-            citaRepository.guardarCita(cita)
+            try {
+                citaRepository.guardarCita(cita)
+                Log.d("CitaViewModel", "Cita guardada exitosamente")
+            } catch (e: Exception) {
+                Log.e("CitaViewModel", "Error al guardar cita: ${e.message}")
+            }
         }
     }
 
     fun obtenerCitas(onResult: (List<Cita>) -> Unit) {
         viewModelScope.launch {
-            val lista = citaRepository.obtenerTodas()
-            onResult(lista)
+            try {
+                val lista = citaRepository.obtenerTodas()
+                onResult(lista)
+            } catch (e: Exception) {
+                Log.e("CitaViewModel", "Error al obtener citas: ${e.message}")
+                onResult(emptyList())
+            }
         }
     }
 
     fun actualizarCita(cita: Cita) {
         viewModelScope.launch {
-            citaRepository.actualizarCita(cita)
+            try {
+                citaRepository.actualizarCita(cita)
+                Log.d("CitaViewModel", "Cita actualizada exitosamente")
+            } catch (e: Exception) {
+                Log.e("CitaViewModel", "Error al actualizar cita: ${e.message}")
+            }
         }
     }
 
     fun eliminarCita(id: String) {
         viewModelScope.launch {
-            citaRepository.eliminarCita(id)
+            try {
+                citaRepository.eliminarCita(id)
+                Log.d("CitaViewModel", "Cita eliminada exitosamente")
+            } catch (e: Exception) {
+                Log.e("CitaViewModel", "Error al eliminar cita: ${e.message}")
+            }
         }
     }
 }

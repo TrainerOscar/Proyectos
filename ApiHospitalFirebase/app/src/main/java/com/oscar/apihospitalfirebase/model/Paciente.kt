@@ -1,7 +1,7 @@
 package com.oscar.apihospitalfirebase.model
 
 data class Paciente(
-    val id: String = "",
+    var id: String = "",
     val nombre: String = "",
     val edad: Int = 0,
     val genero: String = "",

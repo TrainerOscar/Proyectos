@@ -1,32 +1,51 @@
 package com.oscar.apihospitalfirebase.repository
 
-import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ktx.getValue
 import com.oscar.apihospitalfirebase.model.Cita
 import kotlinx.coroutines.tasks.await
 
 class CitaRepository {
-    private val db = FirebaseFirestore.getInstance()
-    private val coleccion = db.collection("citas")
+    private val db = FirebaseDatabase.getInstance()
+    private val citasRef = db.getReference("citas")
 
+    // Guardar una nueva cita
     suspend fun guardarCita(cita: Cita) {
-        coleccion.document(cita.id).set(cita).await()
+        if (cita.id == null) {
+            val nuevaRef = citasRef.push()
+            cita.id = nuevaRef.key.toString()
+            nuevaRef.setValue(cita).await()
+        } else {
+            citasRef.child(cita.id!!).setValue(cita).await()
+        }
     }
 
+    // Obtener todas las citas
     suspend fun obtenerTodas(): List<Cita> {
-        val snapshot = coleccion.get().await()
-        return snapshot.toObjects(Cita::class.java)
+        val snapshot = citasRef.get().await()
+        val lista = mutableListOf<Cita>()
+        for (child in snapshot.children) {
+            val cita = child.getValue(Cita::class.java)
+            cita?.let { lista.add(it) }
+        }
+        return lista
     }
 
+    // Obtener una cita por ID
     suspend fun obtenerPorId(id: String): Cita? {
-        val doc = coleccion.document(id).get().await()
-        return doc.toObject(Cita::class.java)
+        val snapshot = citasRef.child(id).get().await()
+        return snapshot.getValue(Cita::class.java)
     }
 
+    // Actualizar una cita
     suspend fun actualizarCita(cita: Cita) {
-        coleccion.document(cita.id).set(cita).await()
+        cita.id?.let {
+            citasRef.child(it).setValue(cita).await()
+        }
     }
 
+    // Eliminar una cita
     suspend fun eliminarCita(id: String) {
-        coleccion.document(id).delete().await()
+        citasRef.child(id).removeValue().await()
     }
 }

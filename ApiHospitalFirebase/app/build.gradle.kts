@@ -58,11 +58,12 @@ dependencies {
     implementation(libs.androidx.material.icons.extended)
     implementation(libs.material3)
     implementation(libs.androidx.navigation.compose) // o la más reciente
+    implementation("com.google.firebase:firebase-database-ktx:21.0.0")
 
 
     // Firebase BOM y Firestore
-    implementation(platform("com.google.firebase:firebase-bom:33.15.0"))
-    implementation("com.google.firebase:firebase-analytics")
+    implementation(libs.firebase.bom)
+    implementation(libs.firebase.analytics)
     implementation(libs.firebase.firestore.ktx)
 
     // Coroutines
