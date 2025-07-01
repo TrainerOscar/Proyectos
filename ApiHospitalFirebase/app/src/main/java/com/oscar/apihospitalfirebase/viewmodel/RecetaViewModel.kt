@@ -11,13 +11,19 @@ class RecetaViewModel : ViewModel() {
     private val recetaRepository = RecetaRepository()
 
     // Guardar una receta
-    fun guardarReceta(receta: Receta) {
+    fun guardarReceta(
+        receta: Receta,
+        onSuccess: () -> Unit,
+        onError: (Exception) -> Unit
+    ) {
         viewModelScope.launch {
             try {
                 recetaRepository.guardarReceta(receta)
                 Log.d("RecetaViewModel", "Receta guardada exitosamente")
+                onSuccess()
             } catch (e: Exception) {
                 Log.e("RecetaViewModel", "Error al guardar receta: ${e.message}")
+                onError(e)
             }
         }
     }
@@ -30,7 +36,7 @@ class RecetaViewModel : ViewModel() {
                 onResult(lista)
             } catch (e: Exception) {
                 Log.e("RecetaViewModel", "Error al obtener recetas: ${e.message}")
-                onResult(emptyList()) // Retorna una lista vacía en caso de error
+                onResult(emptyList())
             }
         }
     }
@@ -43,7 +49,43 @@ class RecetaViewModel : ViewModel() {
                 onResult(receta)
             } catch (e: Exception) {
                 Log.e("RecetaViewModel", "Error al obtener receta por ID: ${e.message}")
-                onResult(null) // Retorna null en caso de error
+                onResult(null)
+            }
+        }
+    }
+
+    // Actualizar receta
+    fun actualizarReceta(
+        receta: Receta,
+        onSuccess: () -> Unit = {},
+        onError: (Exception) -> Unit = {}
+    ) {
+        viewModelScope.launch {
+            try {
+                recetaRepository.actualizarReceta(receta)
+                Log.d("RecetaViewModel", "Receta actualizada exitosamente")
+                onSuccess()
+            } catch (e: Exception) {
+                Log.e("RecetaViewModel", "Error al actualizar receta: ${e.message}")
+                onError(e)
+            }
+        }
+    }
+
+    // Eliminar receta
+    fun eliminarReceta(
+        id: String,
+        onSuccess: () -> Unit = {},
+        onError: (Exception) -> Unit = {}
+    ) {
+        viewModelScope.launch {
+            try {
+                recetaRepository.eliminarReceta(id)
+                Log.d("RecetaViewModel", "Receta eliminada exitosamente")
+                onSuccess()
+            } catch (e: Exception) {
+                Log.e("RecetaViewModel", "Error al eliminar receta: ${e.message}")
+                onError(e)
             }
         }
     }

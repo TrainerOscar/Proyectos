@@ -10,13 +10,19 @@ import kotlinx.coroutines.launch
 class CitaViewModel : ViewModel() {
     private val citaRepository = CitaRepository()
 
-    fun guardarCita(cita: Cita) {
+    fun guardarCita(
+        cita: Cita,
+        onSuccess: () -> Unit,
+        onError: (Exception) -> Unit
+    ) {
         viewModelScope.launch {
             try {
                 citaRepository.guardarCita(cita)
                 Log.d("CitaViewModel", "Cita guardada exitosamente")
+                onSuccess()
             } catch (e: Exception) {
                 Log.e("CitaViewModel", "Error al guardar cita: ${e.message}")
+                onError(e)
             }
         }
     }
@@ -33,24 +39,36 @@ class CitaViewModel : ViewModel() {
         }
     }
 
-    fun actualizarCita(cita: Cita) {
+    fun actualizarCita(
+        cita: Cita,
+        onSuccess: () -> Unit = {},
+        onError: (Exception) -> Unit = {}
+    ) {
         viewModelScope.launch {
             try {
                 citaRepository.actualizarCita(cita)
                 Log.d("CitaViewModel", "Cita actualizada exitosamente")
+                onSuccess()
             } catch (e: Exception) {
                 Log.e("CitaViewModel", "Error al actualizar cita: ${e.message}")
+                onError(e)
             }
         }
     }
 
-    fun eliminarCita(id: String) {
+    fun eliminarCita(
+        id: String,
+        onSuccess: () -> Unit = {},
+        onError: (Exception) -> Unit = {}
+    ) {
         viewModelScope.launch {
             try {
                 citaRepository.eliminarCita(id)
                 Log.d("CitaViewModel", "Cita eliminada exitosamente")
+                onSuccess()
             } catch (e: Exception) {
                 Log.e("CitaViewModel", "Error al eliminar cita: ${e.message}")
+                onError(e)
             }
         }
     }

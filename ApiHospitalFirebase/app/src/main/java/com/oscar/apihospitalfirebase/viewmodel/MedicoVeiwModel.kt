@@ -11,13 +11,19 @@ class MedicoViewModel : ViewModel() {
     private val medicoRepository = MedicoRepository()
 
     // Guardar un médico
-    fun guardarMedico(medico: Medico) {
+    fun guardarMedico(
+        medico: Medico,
+        onSuccess: () -> Unit,
+        onError: (Exception) -> Unit
+    ) {
         viewModelScope.launch {
             try {
                 medicoRepository.guardarMedico(medico)
                 Log.d("MedicoViewModel", "Médico guardado exitosamente")
+                onSuccess()
             } catch (e: Exception) {
                 Log.e("MedicoViewModel", "Error al guardar médico: ${e.message}")
+                onError(e)
             }
         }
     }
@@ -30,7 +36,7 @@ class MedicoViewModel : ViewModel() {
                 onResult(lista)
             } catch (e: Exception) {
                 Log.e("MedicoViewModel", "Error al obtener médicos: ${e.message}")
-                onResult(emptyList()) // Retorna una lista vacía en caso de error
+                onResult(emptyList())
             }
         }
     }
@@ -43,7 +49,43 @@ class MedicoViewModel : ViewModel() {
                 onResult(medico)
             } catch (e: Exception) {
                 Log.e("MedicoViewModel", "Error al obtener médico por ID: ${e.message}")
-                onResult(null) // Retorna null en caso de error
+                onResult(null)
+            }
+        }
+    }
+
+    // Actualizar médico
+    fun actualizarMedico(
+        medico: Medico,
+        onSuccess: () -> Unit = {},
+        onError: (Exception) -> Unit = {}
+    ) {
+        viewModelScope.launch {
+            try {
+                medicoRepository.actualizarMedico(medico)
+                Log.d("MedicoViewModel", "Médico actualizado exitosamente")
+                onSuccess()
+            } catch (e: Exception) {
+                Log.e("MedicoViewModel", "Error al actualizar médico: ${e.message}")
+                onError(e)
+            }
+        }
+    }
+
+    // Eliminar médico
+    fun eliminarMedico(
+        id: String,
+        onSuccess: () -> Unit = {},
+        onError: (Exception) -> Unit = {}
+    ) {
+        viewModelScope.launch {
+            try {
+                medicoRepository.eliminarMedico(id)
+                Log.d("MedicoViewModel", "Médico eliminado exitosamente")
+                onSuccess()
+            } catch (e: Exception) {
+                Log.e("MedicoViewModel", "Error al eliminar médico: ${e.message}")
+                onError(e)
             }
         }
     }

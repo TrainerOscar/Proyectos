@@ -10,14 +10,20 @@ import kotlinx.coroutines.launch
 class DiagnosticoViewModel : ViewModel() {
     private val diagnosticoRepository = DiagnosticoRepository()
 
-    // Guardar un diagnóstico
-    fun guardarDiagnostico(diagnostico: Diagnostico) {
+    // Guardar un diagnóstico con manejo de éxito y error
+    fun guardarDiagnostico(
+        diagnostico: Diagnostico,
+        onSuccess: () -> Unit,
+        onError: (Exception) -> Unit
+    ) {
         viewModelScope.launch {
             try {
                 diagnosticoRepository.guardarDiagnostico(diagnostico)
                 Log.d("DiagnosticoViewModel", "Diagnóstico guardado exitosamente")
+                onSuccess()
             } catch (e: Exception) {
                 Log.e("DiagnosticoViewModel", "Error al guardar diagnóstico: ${e.message}")
+                onError(e)
             }
         }
     }
@@ -30,7 +36,7 @@ class DiagnosticoViewModel : ViewModel() {
                 onResult(lista)
             } catch (e: Exception) {
                 Log.e("DiagnosticoViewModel", "Error al obtener diagnósticos: ${e.message}")
-                onResult(emptyList()) // Retorna una lista vacía en caso de error
+                onResult(emptyList())
             }
         }
     }
@@ -43,7 +49,43 @@ class DiagnosticoViewModel : ViewModel() {
                 onResult(diagnostico)
             } catch (e: Exception) {
                 Log.e("DiagnosticoViewModel", "Error al obtener diagnóstico por ID: ${e.message}")
-                onResult(null) // Retorna null en caso de error
+                onResult(null)
+            }
+        }
+    }
+
+    // Actualizar diagnóstico
+    fun actualizarDiagnostico(
+        diagnostico: Diagnostico,
+        onSuccess: () -> Unit = {},
+        onError: (Exception) -> Unit = {}
+    ) {
+        viewModelScope.launch {
+            try {
+                diagnosticoRepository.actualizarDiagnostico(diagnostico)
+                Log.d("DiagnosticoViewModel", "Diagnóstico actualizado")
+                onSuccess()
+            } catch (e: Exception) {
+                Log.e("DiagnosticoViewModel", "Error al actualizar diagnóstico: ${e.message}")
+                onError(e)
+            }
+        }
+    }
+
+    // Eliminar diagnóstico
+    fun eliminarDiagnostico(
+        id: String,
+        onSuccess: () -> Unit = {},
+        onError: (Exception) -> Unit = {}
+    ) {
+        viewModelScope.launch {
+            try {
+                diagnosticoRepository.eliminarDiagnostico(id)
+                Log.d("DiagnosticoViewModel", "Diagnóstico eliminado")
+                onSuccess()
+            } catch (e: Exception) {
+                Log.e("DiagnosticoViewModel", "Error al eliminar diagnóstico: ${e.message}")
+                onError(e)
             }
         }
     }

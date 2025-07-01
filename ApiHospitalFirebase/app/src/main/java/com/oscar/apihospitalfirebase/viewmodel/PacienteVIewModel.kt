@@ -11,37 +11,55 @@ class PacienteViewModel : ViewModel() {
     private val pacienteRepository = PacienteRepository()
 
     // Guardar un paciente
-    fun guardarPaciente(paciente: Paciente) {
+    fun guardarPaciente(
+        paciente: Paciente,
+        onSuccess: () -> Unit,
+        onError: (Exception) -> Unit
+    ) {
         viewModelScope.launch {
             try {
                 pacienteRepository.guardarPaciente(paciente)
                 Log.d("PacienteViewModel", "Paciente guardado exitosamente")
+                onSuccess()
             } catch (e: Exception) {
                 Log.e("PacienteViewModel", "Error al guardar paciente: ${e.message}")
+                onError(e)
             }
         }
     }
 
     // Actualizar un paciente
-    fun actualizarPaciente(paciente: Paciente) {
+    fun actualizarPaciente(
+        paciente: Paciente,
+        onSuccess: () -> Unit = {},
+        onError: (Exception) -> Unit = {}
+    ) {
         viewModelScope.launch {
             try {
                 pacienteRepository.actualizarPaciente(paciente)
                 Log.d("PacienteViewModel", "Paciente actualizado exitosamente")
+                onSuccess()
             } catch (e: Exception) {
                 Log.e("PacienteViewModel", "Error al actualizar paciente: ${e.message}")
+                onError(e)
             }
         }
     }
 
     // Eliminar un paciente
-    fun eliminarPaciente(id: String) {
+    fun eliminarPaciente(
+        id: String,
+        onSuccess: () -> Unit = {},
+        onError: (Exception) -> Unit = {}
+    ) {
         viewModelScope.launch {
             try {
                 pacienteRepository.eliminarPaciente(id)
                 Log.d("PacienteViewModel", "Paciente eliminado exitosamente")
+                onSuccess()
             } catch (e: Exception) {
                 Log.e("PacienteViewModel", "Error al eliminar paciente: ${e.message}")
+                onError(e)
             }
         }
     }
@@ -54,7 +72,7 @@ class PacienteViewModel : ViewModel() {
                 onResult(lista)
             } catch (e: Exception) {
                 Log.e("PacienteViewModel", "Error al obtener pacientes: ${e.message}")
-                onResult(emptyList()) // Retorna una lista vacía en caso de error
+                onResult(emptyList())
             }
         }
     }
@@ -67,7 +85,7 @@ class PacienteViewModel : ViewModel() {
                 onResult(paciente)
             } catch (e: Exception) {
                 Log.e("PacienteViewModel", "Error al obtener paciente por ID: ${e.message}")
-                onResult(null) // Retorna null en caso de error
+                onResult(null)
             }
         }
     }

@@ -2,6 +2,7 @@
 agp = "8.9.1"
 firebaseAdmin = "9.2.0"
 firebaseBom = "33.16.0"
+firebaseDatabaseKtx = "21.0.0"
 googleServices = "4.4.2"
 kotlin = "2.0.21"
 coreKtx = "1.16.0"
@@ -31,6 +32,7 @@ androidx-runtime = { module = "androidx.compose.runtime:runtime", version.ref = 
 firebase-admin = { module = "com.google.firebase:firebase-admin", version.ref = "firebaseAdmin" }
 firebase-analytics = { module = "com.google.firebase:firebase-analytics" }
 firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
+firebase-database-ktx = { module = "com.google.firebase:firebase-database-ktx", version.ref = "firebaseDatabaseKtx" }
 firebase-firestore-ktx = { module = "com.google.firebase:firebase-firestore-ktx" }
 google-services = { module = "com.google.gms:google-services", version.ref = "googleServices" }
 jackson-module-kotlin = { module = "com.fasterxml.jackson.module:jackson-module-kotlin" }
