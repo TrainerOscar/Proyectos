@@ -7,7 +7,7 @@ data class Paciente(
     val genero: String = "",
     val direccion: String = "",
     val telefono: String = "",
-    val motivo: String,
-    val fechaCita: String,
-    val horaCita: String
+    val motivo: String = "",
+    val fechaCita: String = "",
+    val horaCita: String = ""
 )

@@ -1,6 +1,6 @@
 package com.oscar.apihospitalfirebase.screen
 
-import Receta
+import com.oscar.apihospitalfirebase.model.Receta
 import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
