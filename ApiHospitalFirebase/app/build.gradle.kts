@@ -59,6 +59,7 @@ dependencies {
     implementation(libs.material3)
     implementation(libs.androidx.navigation.compose) // o la más reciente
     implementation(libs.firebase.database.ktx)
+    implementation(libs.androidx.navigation.compose.v277)
 
 
     // Firebase BOM y Firestore

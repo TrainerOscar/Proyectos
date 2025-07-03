@@ -1,7 +1,8 @@
 package com.oscar.apihospitalfirebase.repository
 
-import Receta
+
 import com.google.firebase.database.FirebaseDatabase
+import com.oscar.apihospitalfirebase.model.Receta
 import kotlinx.coroutines.tasks.await
 
 class  RecetaRepository {
