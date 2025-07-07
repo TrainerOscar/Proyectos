@@ -9,14 +9,14 @@ import com.oscar.apihospitalfirebase.model.Medico
 
 @Composable
 fun FormularioMedicoDialog(
-    medico: Medico?,
+    medico: Medico?, // null para nuevo
     onDismiss: () -> Unit,
     onGuardar: (Medico) -> Unit
 ) {
     var nombre by remember { mutableStateOf(medico?.nombre ?: "") }
     var especialidad by remember { mutableStateOf(medico?.especialidad ?: "") }
-    var telefono by remember { mutableStateOf(medico?.telefono ?: "") }
-    var correo by remember { mutableStateOf(medico?.correo ?: "") }
+    var horario by remember { mutableStateOf(medico?.horario ?: "") }
+    var sala by remember { mutableStateOf(medico?.sala ?: "") }
 
     AlertDialog(
         onDismissRequest = onDismiss,
@@ -26,8 +26,8 @@ fun FormularioMedicoDialog(
                     id = medico?.id ?: System.currentTimeMillis().toString(),
                     nombre = nombre,
                     especialidad = especialidad,
-                    telefono = telefono,
-                    correo = correo
+                    horario = horario,
+                    sala = sala
                 )
                 onGuardar(nuevoMedico)
             }) {
@@ -55,15 +55,16 @@ fun FormularioMedicoDialog(
                     modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp)
                 )
                 OutlinedTextField(
-                    value = telefono,
-                    onValueChange = { telefono = it },
-                    label = { Text("Teléfono") },
+                    value = horario,
+                    onValueChange = { horario = it },
+                    label = { Text("Horario") },
+                    placeholder = { Text("Ej. 08:00 - 14:00") },
                     modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp)
                 )
                 OutlinedTextField(
-                    value = correo,
-                    onValueChange = { correo = it },
-                    label = { Text("Correo") },
+                    value = sala,
+                    onValueChange = { sala = it },
+                    label = { Text("Sala") },
                     modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp)
                 )
             }

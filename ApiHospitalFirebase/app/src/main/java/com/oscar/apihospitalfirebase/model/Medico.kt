@@ -5,5 +5,7 @@ data class Medico(
     val nombre: String = "",
     val especialidad: String = "",
     val telefono: String = "",
-    val correo: String = ""
+    val correo: String = "",
+    val horario: String = "",
+    val sala: String = ""
 )
