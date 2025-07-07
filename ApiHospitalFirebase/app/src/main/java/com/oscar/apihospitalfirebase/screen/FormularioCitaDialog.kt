@@ -1,114 +1,121 @@
-package com.oscar.apihospitalfirebase.ui.dialog
+package com.oscar.apihospitalfirebase.screen
 
+import android.util.Log
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.oscar.apihospitalfirebase.model.Cita
 import com.oscar.apihospitalfirebase.model.Medico
 import com.oscar.apihospitalfirebase.model.Paciente
+import com.oscar.apihospitalfirebase.viewmodel.CitaViewModel
+import com.oscar.apihospitalfirebase.viewmodel.MedicoViewModel
+import com.oscar.apihospitalfirebase.viewmodel.PacienteViewModel
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun FormularioCitaDialog(
-    cita: Cita?,
-    pacientes: List<Paciente>,
-    medicos: List<Medico>,
-    onDismiss: () -> Unit,
-    onGuardar: (Cita) -> Unit
+fun AppointmentScreen(
+    citaViewModel: CitaViewModel = viewModel(),
+    pacienteViewModel: PacienteViewModel = viewModel(),
+    medicoViewModel: MedicoViewModel = viewModel()
 ) {
-    var fecha by remember { mutableStateOf(cita?.fecha ?: "") }
-    var hora by remember { mutableStateOf(cita?.hora ?: "") }
-    var pacienteSeleccionado by remember { mutableStateOf(cita?.pacienteId ?: "") }
-    var medicoSeleccionado by remember { mutableStateOf(cita?.medicoId ?: "") }
+    var citas by remember { mutableStateOf<List<Cita>>(emptyList()) }
+    var pacientes by remember { mutableStateOf<List<Paciente>>(emptyList()) }
+    var medicos by remember { mutableStateOf<List<Medico>>(emptyList()) }
 
-    AlertDialog(
-        onDismissRequest = onDismiss,
-        confirmButton = {
-            TextButton(onClick = {
-                val nuevaCita = Cita(
-                    id = cita?.id ?: System.currentTimeMillis().toString(),
-                    fecha = fecha,
-                    hora = hora,
-                    pacienteId = pacienteSeleccionado,
-                    medicoId = medicoSeleccionado
-                )
-                onGuardar(nuevaCita)
-            }) {
-                Text("Guardar")
-            }
-        },
-        dismissButton = {
-            TextButton(onClick = onDismiss) {
-                Text("Cancelar")
-            }
-        },
-        title = { Text("Formulario de Cita") },
-        text = {
-            Column(modifier = Modifier.fillMaxWidth()) {
-                OutlinedTextField(
-                    value = fecha,
-                    onValueChange = { fecha = it },
-                    label = { Text("Fecha") },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 4.dp)
-                )
-                OutlinedTextField(
-                    value = hora,
-                    onValueChange = { hora = it },
-                    label = { Text("Hora") },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 4.dp)
-                )
-                Spacer(modifier = Modifier.height(8.dp))
+    LaunchedEffect(Unit) {
+        citaViewModel.obtenerCitas { citas = it }
+        pacienteViewModel.obtenerPacientes { pacientes = it }
+        medicoViewModel.obtenerMedicos { medicos = it }
+    }
 
-                Text("Selecciona un Paciente:")
-                DropdownMenuBox(
-                    opciones = pacientes.mapNotNull { it.nombre?.let { name -> name to (it.id ?: "") } },
-                    seleccionado = pacienteSeleccionado,
-                    onSeleccionar = { pacienteSeleccionado = it }
-                )
-
-                Spacer(modifier = Modifier.height(8.dp))
-
-                Text("Selecciona un Médico:")
-                DropdownMenuBox(
-                    opciones = medicos.mapNotNull { it.nombre?.let { name -> name to (it.id ?: "") } },
-                    seleccionado = medicoSeleccionado,
-                    onSeleccionar = { medicoSeleccionado = it }
-                )
-            }
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = { Text("📅 Citas Registradas", fontSize = 20.sp) }
+            )
         }
-    )
-}
+    ) { padding ->
+        Column(modifier = Modifier
+            .padding(padding)
+            .padding(8.dp)) {
 
-@Composable
-fun DropdownMenuBox(
-    opciones: List<Pair<String, String>>,
-    seleccionado: String,
-    onSeleccionar: (String) -> Unit
-) {
-    var expanded by remember { mutableStateOf(false) }
-    val seleccionActual = opciones.find { it.second == seleccionado }?.first ?: "Seleccionar"
+            if (citas.isEmpty()) {
+                Text("No hay citas registradas.", style = MaterialTheme.typography.bodyLarge)
+            } else {
+                LazyColumn {
+                    items(citas) { cita ->
+                        val paciente = pacientes.find { it.id == cita.pacienteId }?.nombre ?: "Desconocido"
+                        val medico = medicos.find { it.id == cita.medicoId }?.nombre ?: "Desconocido"
 
-    Box(modifier = Modifier.fillMaxWidth()) {
-        OutlinedButton(onClick = { expanded = true }, modifier = Modifier.fillMaxWidth()) {
-            Text(seleccionActual)
-        }
-        DropdownMenu(
-            expanded = expanded,
-            onDismissRequest = { expanded = false }
-        ) {
-            opciones.forEach { (nombre, id) ->
-                DropdownMenuItem(
-                    text = { Text(nombre) },
-                    onClick = {
-                        onSeleccionar(id)
-                        expanded = false
+                        Card(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 6.dp),
+                            shape = RoundedCornerShape(12.dp),
+                            colors = CardDefaults.cardColors(containerColor = Color(0xFFECECEC))
+                        ) {
+                            Column(modifier = Modifier.padding(16.dp)) {
+                                Text("Paciente: $paciente", fontSize = 16.sp)
+                                Text("Médico: $medico", fontSize = 16.sp)
+                                Text("Fecha: ${cita.fecha}")
+                                Text("Hora: ${cita.hora}")
+                                Text("Estado: ${cita.estado}", fontWeight = androidx.compose.ui.text.font.FontWeight.SemiBold)
+
+                                Spacer(modifier = Modifier.height(8.dp))
+
+                                Row(
+                                    horizontalArrangement = Arrangement.SpaceBetween,
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    modifier = Modifier.fillMaxWidth()
+                                ) {
+                                    Button(
+                                        onClick = {
+                                            val citaActualizada = cita.copy(estado = "Aceptada")
+                                            citaViewModel.actualizarCita(citaActualizada) {
+                                                citaViewModel.obtenerCitas { citas = it }
+                                            }
+                                        },
+                                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF4CAF50))
+                                    ) {
+                                        Text("Aceptar")
+                                    }
+
+                                    Button(
+                                        onClick = {
+                                            val citaActualizada = cita.copy(estado = "Rechazada")
+                                            citaViewModel.actualizarCita(citaActualizada) {
+                                                citaViewModel.obtenerCitas { citas = it }
+                                            }
+                                        },
+                                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFF44336))
+                                    ) {
+                                        Text("Rechazar")
+                                    }
+
+                                    IconButton(onClick = {
+                                        citaViewModel.eliminarCita(cita.id) {
+                                            citaViewModel.obtenerCitas { citas = it }
+                                        }
+                                    }) {
+                                        Icon(Icons.Filled.Delete, contentDescription = "Eliminar cita")
+                                    }
+                                }
+                            }
+                        }
                     }
-                )
+                }
             }
         }
     }

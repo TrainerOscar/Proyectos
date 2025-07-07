@@ -11,7 +11,6 @@ class PacienteViewModel : ViewModel() {
 
     private val pacienteRepository = PacienteRepository()
 
-    // Guardar paciente
     fun guardarPaciente(
         paciente: Paciente,
         onSuccess: () -> Unit,
@@ -29,7 +28,6 @@ class PacienteViewModel : ViewModel() {
         }
     }
 
-    // Actualizar paciente
     fun actualizarPaciente(
         paciente: Paciente,
         onSuccess: () -> Unit = {},
@@ -47,7 +45,6 @@ class PacienteViewModel : ViewModel() {
         }
     }
 
-    // Eliminar paciente
     fun eliminarPaciente(
         id: String,
         onSuccess: () -> Unit = {},
@@ -65,11 +62,11 @@ class PacienteViewModel : ViewModel() {
         }
     }
 
-    // Obtener todos los pacientes
     fun obtenerPacientes(onResult: (List<Paciente>) -> Unit) {
         viewModelScope.launch {
             try {
                 val lista = pacienteRepository.obtenerTodos()
+                Log.d("PacienteViewModel", "Pacientes cargados: ${lista.size}")
                 onResult(lista)
             } catch (e: Exception) {
                 Log.e("PacienteViewModel", "Error al obtener pacientes: ${e.message}")
@@ -78,7 +75,6 @@ class PacienteViewModel : ViewModel() {
         }
     }
 
-    // Obtener paciente por ID
     fun obtenerPorId(id: String, onResult: (Paciente?) -> Unit) {
         viewModelScope.launch {
             try {

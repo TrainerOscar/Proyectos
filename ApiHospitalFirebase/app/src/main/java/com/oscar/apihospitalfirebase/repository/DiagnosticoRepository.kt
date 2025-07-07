@@ -11,12 +11,12 @@ class DiagnosticoRepository {
 
     // Guardar un nuevo diagnóstico
     suspend fun guardarDiagnostico(diagnostico: Diagnostico) {
-        if (diagnostico.id.isNullOrEmpty()) {
+        if (diagnostico.id.isEmpty()) {
             val nuevaRef = diagnosticosRef.push()
-            diagnostico.id = nuevaRef.key.toString()
+            diagnostico.id = nuevaRef.key ?: ""
             nuevaRef.setValue(diagnostico).await()
         } else {
-            diagnosticosRef.child(diagnostico.id!!).setValue(diagnostico).await()
+            diagnosticosRef.child(diagnostico.id).setValue(diagnostico).await()
         }
     }
 
@@ -39,9 +39,7 @@ class DiagnosticoRepository {
 
     // Actualizar un diagnóstico
     suspend fun actualizarDiagnostico(diagnostico: Diagnostico) {
-        diagnostico.id?.let {
-            diagnosticosRef.child(it).setValue(diagnostico).await()
-        }
+        diagnosticosRef.child(diagnostico.id).setValue(diagnostico).await()
     }
 
     // Eliminar un diagnóstico

@@ -11,7 +11,6 @@ class DiagnosticoViewModel : ViewModel() {
 
     private val diagnosticoRepository = DiagnosticoRepository()
 
-    // Guardar diagnóstico
     fun guardarDiagnostico(
         diagnostico: Diagnostico,
         onSuccess: () -> Unit,
@@ -29,7 +28,6 @@ class DiagnosticoViewModel : ViewModel() {
         }
     }
 
-    // Obtener todos los diagnósticos
     fun obtenerDiagnosticos(onResult: (List<Diagnostico>) -> Unit) {
         viewModelScope.launch {
             try {
@@ -42,7 +40,6 @@ class DiagnosticoViewModel : ViewModel() {
         }
     }
 
-    // Obtener diagnóstico por ID
     fun obtenerPorId(id: String, onResult: (Diagnostico?) -> Unit) {
         viewModelScope.launch {
             try {
@@ -55,7 +52,6 @@ class DiagnosticoViewModel : ViewModel() {
         }
     }
 
-    // Actualizar diagnóstico
     fun actualizarDiagnostico(
         diagnostico: Diagnostico,
         onSuccess: () -> Unit = {},
@@ -73,7 +69,6 @@ class DiagnosticoViewModel : ViewModel() {
         }
     }
 
-    // Eliminar diagnóstico
     fun eliminarDiagnostico(
         id: String,
         onSuccess: () -> Unit = {},

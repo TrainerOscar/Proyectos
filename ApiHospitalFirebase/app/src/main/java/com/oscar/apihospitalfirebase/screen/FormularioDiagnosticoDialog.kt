@@ -8,6 +8,7 @@ import androidx.compose.ui.unit.dp
 import com.oscar.apihospitalfirebase.model.Diagnostico
 import com.oscar.apihospitalfirebase.model.Medico
 import com.oscar.apihospitalfirebase.model.Paciente
+import com.oscar.apihospitalfirebase.ui.components.DropdownMenuBox
 
 @Composable
 fun FormularioDiagnosticoDialog(
@@ -18,6 +19,7 @@ fun FormularioDiagnosticoDialog(
     onGuardar: (Diagnostico) -> Unit
 ) {
     var descripcion by remember { mutableStateOf(diagnostico?.descripcion ?: "") }
+    var recomendaciones by remember { mutableStateOf(diagnostico?.recomendaciones ?: "") }
     var fecha by remember { mutableStateOf(diagnostico?.fecha ?: "") }
     var pacienteSeleccionado by remember { mutableStateOf(diagnostico?.pacienteId ?: "") }
     var medicoSeleccionado by remember { mutableStateOf(diagnostico?.medicoId ?: "") }
@@ -29,6 +31,7 @@ fun FormularioDiagnosticoDialog(
                 val nuevoDiagnostico = Diagnostico(
                     id = diagnostico?.id ?: System.currentTimeMillis().toString(),
                     descripcion = descripcion,
+                    recomendaciones = recomendaciones,
                     fecha = fecha,
                     pacienteId = pacienteSeleccionado,
                     medicoId = medicoSeleccionado
@@ -52,6 +55,14 @@ fun FormularioDiagnosticoDialog(
                     label = { Text("Descripción") },
                     modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp)
                 )
+
+                OutlinedTextField(
+                    value = recomendaciones,
+                    onValueChange = { recomendaciones = it },
+                    label = { Text("Recomendaciones") },
+                    modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp)
+                )
+
                 OutlinedTextField(
                     value = fecha,
                     onValueChange = { fecha = it },
@@ -62,7 +73,7 @@ fun FormularioDiagnosticoDialog(
                 Spacer(modifier = Modifier.height(8.dp))
                 Text("Selecciona un Paciente:")
                 DropdownMenuBox(
-                    opciones = pacientes.mapNotNull { it.nombre?.let { name -> name to (it.id ?: "") } },
+                    opciones = pacientes.map { it.nombre to it.id },
                     seleccionado = pacienteSeleccionado,
                     onSeleccionar = { pacienteSeleccionado = it }
                 )
@@ -70,7 +81,7 @@ fun FormularioDiagnosticoDialog(
                 Spacer(modifier = Modifier.height(8.dp))
                 Text("Selecciona un Médico:")
                 DropdownMenuBox(
-                    opciones = medicos.mapNotNull { it.nombre?.let { name -> name to (it.id ?: "") } },
+                    opciones = medicos.map { it.nombre to it.id },
                     seleccionado = medicoSeleccionado,
                     onSeleccionar = { medicoSeleccionado = it }
                 )
