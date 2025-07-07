@@ -1,15 +1,14 @@
 package com.oscar.apihospitalfirebase.viewmodel
 
-
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.oscar.apihospitalfirebase.model.Receta
-
 import com.oscar.apihospitalfirebase.repository.RecetaRepository
 import kotlinx.coroutines.launch
 
 class RecetaViewModel : ViewModel() {
+
     private val recetaRepository = RecetaRepository()
 
     // Guardar una receta
@@ -43,7 +42,7 @@ class RecetaViewModel : ViewModel() {
         }
     }
 
-    // Obtener una receta por ID
+    // Obtener receta por ID
     fun obtenerPorId(id: String, onResult: (Receta?) -> Unit) {
         viewModelScope.launch {
             try {

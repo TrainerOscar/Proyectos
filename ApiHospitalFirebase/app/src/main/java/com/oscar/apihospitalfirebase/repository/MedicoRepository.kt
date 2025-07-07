@@ -11,12 +11,12 @@ class MedicoRepository {
 
     // Guardar un nuevo médico
     suspend fun guardarMedico(medico: Medico) {
-        if (medico.id == null) {
+        if (medico.id.isEmpty()) {
             val nuevaRef = medicosRef.push()
-            medico.id = nuevaRef.key.toString()
+            medico.id = nuevaRef.key ?: ""
             nuevaRef.setValue(medico).await()
         } else {
-            medicosRef.child(medico.id!!).setValue(medico).await()
+            medicosRef.child(medico.id).setValue(medico).await()
         }
     }
 
@@ -39,9 +39,7 @@ class MedicoRepository {
 
     // Actualizar un médico
     suspend fun actualizarMedico(medico: Medico) {
-        medico.id?.let {
-            medicosRef.child(it).setValue(medico).await()
-        }
+        medicosRef.child(medico.id).setValue(medico).await()
     }
 
     // Eliminar un médico

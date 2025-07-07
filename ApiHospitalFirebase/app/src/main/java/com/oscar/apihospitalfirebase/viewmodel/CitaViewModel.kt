@@ -39,6 +39,18 @@ class CitaViewModel : ViewModel() {
         }
     }
 
+    fun obtenerPorId(id: String, onResult: (Cita?) -> Unit) {
+        viewModelScope.launch {
+            try {
+                val cita = citaRepository.obtenerPorId(id)
+                onResult(cita)
+            } catch (e: Exception) {
+                Log.e("CitaViewModel", "Error al obtener cita por ID: ${e.message}")
+                onResult(null)
+            }
+        }
+    }
+
     fun actualizarCita(
         cita: Cita,
         onSuccess: () -> Unit = {},

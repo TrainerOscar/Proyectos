@@ -8,21 +8,31 @@ import androidx.compose.material.icons.filled.MedicalServices
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Receipt
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
-import com.oscar.apihospitalfirebase.model.Medico
-import com.oscar.apihospitalfirebase.model.Paciente
 import com.oscar.apihospitalfirebase.navigation.AppNavHost
+import com.oscar.apihospitalfirebase.viewmodel.MedicoViewModel
+import com.oscar.apihospitalfirebase.viewmodel.PacienteViewModel
 import com.oscar.apihospitalfirebase.viewmodel.RecetaViewModel
 
 @Composable
 fun MainScreen(
-    navController: NavHostController,
-    recetaViewModel: RecetaViewModel,
-    pacientes: List<Paciente>,
-    medicos: List<Medico>
+    navController: NavHostController
 ) {
+    val recetaViewModel: RecetaViewModel = viewModel()
+    val pacienteViewModel: PacienteViewModel = viewModel()
+    val medicoViewModel: MedicoViewModel = viewModel()
+
+    var pacientes by remember { mutableStateOf(emptyList<com.oscar.apihospitalfirebase.model.Paciente>()) }
+    var medicos by remember { mutableStateOf(emptyList<com.oscar.apihospitalfirebase.model.Medico>()) }
+
+    LaunchedEffect(Unit) {
+        pacienteViewModel.obtenerPacientes { pacientes = it }
+        medicoViewModel.obtenerMedicos { medicos = it }
+    }
+
     Scaffold(
         bottomBar = {
             NavigationBar {

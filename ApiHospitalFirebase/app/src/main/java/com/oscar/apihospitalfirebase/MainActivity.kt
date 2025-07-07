@@ -4,8 +4,8 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.remember
 import androidx.navigation.compose.rememberNavController
 import com.oscar.apihospitalfirebase.model.Paciente
 import com.oscar.apihospitalfirebase.model.Medico
@@ -19,29 +19,30 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         setContent {
+            // ViewModels
             val pacienteViewModel: PacienteViewModel = viewModels<PacienteViewModel>().value
             val medicoViewModel: MedicoViewModel = viewModels<MedicoViewModel>().value
             val recetaViewModel: RecetaViewModel = viewModels<RecetaViewModel>().value
 
+            // Estados de pacientes y médicos compartidos
             val pacientes = remember { mutableStateListOf<Paciente>() }
             val medicos = remember { mutableStateListOf<Medico>() }
 
-            // Cargar pacientes
+            // Cargar datos
             pacienteViewModel.obtenerPacientes {
                 pacientes.clear()
                 pacientes.addAll(it)
             }
 
-            // Cargar médicos
             medicoViewModel.obtenerMedicos {
                 medicos.clear()
                 medicos.addAll(it)
             }
 
-            // Crear navController
+            // Navegación
             val navController = rememberNavController()
 
-            // Llamar pantalla principal
+            // Pantalla principal
             MainScreen(
                 navController = navController,
                 recetaViewModel = recetaViewModel,

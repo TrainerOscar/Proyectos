@@ -16,25 +16,23 @@ import com.oscar.apihospitalfirebase.model.Paciente
 import com.oscar.apihospitalfirebase.model.Medico
 import com.oscar.apihospitalfirebase.ui.dialog.FormularioRecetaDialog
 import com.oscar.apihospitalfirebase.viewmodel.RecetaViewModel
-import com.oscar.apihospitalfirebase.viewmodel.PacienteViewModel
-import com.oscar.apihospitalfirebase.viewmodel.MedicoViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PrescriptionScreen(
     recetaViewModel: RecetaViewModel = viewModel(),
-    pacienteViewModel: PacienteViewModel = viewModel(),
-    medicoViewModel: MedicoViewModel = viewModel()
+    pacientesExternos: List<Paciente>,
+    medicosExternos: List<Medico>
 ) {
     var showDialog by remember { mutableStateOf(false) }
     var recetas by remember { mutableStateOf<List<Receta>>(emptyList()) }
-    var pacientes by remember { mutableStateOf<List<Paciente>>(emptyList()) }
-    var medicos by remember { mutableStateOf<List<Medico>>(emptyList()) }
+
+    // Usamos directamente los datos externos, ya no hace falta cargarlos con ViewModel
+    val pacientes = pacientesExternos
+    val medicos = medicosExternos
 
     LaunchedEffect(Unit) {
         recetaViewModel.obtenerRecetas { recetas = it }
-        pacienteViewModel.obtenerPacientes { pacientes = it }
-        medicoViewModel.obtenerMedicos { medicos = it }
     }
 
     Scaffold(

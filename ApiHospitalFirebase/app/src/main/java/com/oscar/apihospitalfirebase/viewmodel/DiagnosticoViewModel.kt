@@ -8,9 +8,10 @@ import com.oscar.apihospitalfirebase.repository.DiagnosticoRepository
 import kotlinx.coroutines.launch
 
 class DiagnosticoViewModel : ViewModel() {
+
     private val diagnosticoRepository = DiagnosticoRepository()
 
-    // Guardar un diagnóstico con manejo de éxito y error
+    // Guardar diagnóstico
     fun guardarDiagnostico(
         diagnostico: Diagnostico,
         onSuccess: () -> Unit,
@@ -41,7 +42,7 @@ class DiagnosticoViewModel : ViewModel() {
         }
     }
 
-    // Obtener un diagnóstico por ID
+    // Obtener diagnóstico por ID
     fun obtenerPorId(id: String, onResult: (Diagnostico?) -> Unit) {
         viewModelScope.launch {
             try {
@@ -63,7 +64,7 @@ class DiagnosticoViewModel : ViewModel() {
         viewModelScope.launch {
             try {
                 diagnosticoRepository.actualizarDiagnostico(diagnostico)
-                Log.d("DiagnosticoViewModel", "Diagnóstico actualizado")
+                Log.d("DiagnosticoViewModel", "Diagnóstico actualizado exitosamente")
                 onSuccess()
             } catch (e: Exception) {
                 Log.e("DiagnosticoViewModel", "Error al actualizar diagnóstico: ${e.message}")
@@ -81,7 +82,7 @@ class DiagnosticoViewModel : ViewModel() {
         viewModelScope.launch {
             try {
                 diagnosticoRepository.eliminarDiagnostico(id)
-                Log.d("DiagnosticoViewModel", "Diagnóstico eliminado")
+                Log.d("DiagnosticoViewModel", "Diagnóstico eliminado exitosamente")
                 onSuccess()
             } catch (e: Exception) {
                 Log.e("DiagnosticoViewModel", "Error al eliminar diagnóstico: ${e.message}")

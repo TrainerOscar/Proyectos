@@ -31,10 +31,14 @@ fun DiagnosisScreen(
     var pacientes by remember { mutableStateOf<List<Paciente>>(emptyList()) }
     var medicos by remember { mutableStateOf<List<Medico>>(emptyList()) }
 
-    LaunchedEffect(Unit) {
+    fun cargarDatos() {
         diagnosticoViewModel.obtenerDiagnosticos { diagnosticos = it }
         pacienteViewModel.obtenerPacientes { pacientes = it }
         medicoViewModel.obtenerMedicos { medicos = it }
+    }
+
+    LaunchedEffect(Unit) {
+        cargarDatos()
     }
 
     Scaffold(
@@ -77,7 +81,10 @@ fun DiagnosisScreen(
             onGuardar = { nuevoDiagnostico ->
                 diagnosticoViewModel.guardarDiagnostico(
                     nuevoDiagnostico,
-                    onSuccess = { showDialog = false },
+                    onSuccess = {
+                        showDialog = false
+                        cargarDatos() // Recargar lista
+                    },
                     onError = { e -> Log.e("DiagnosisScreen", "Error al guardar diagnóstico: ${e.message}") }
                 )
             }

@@ -60,7 +60,10 @@ fun DoctorScreen(viewModel: MedicoViewModel = viewModel()) {
             onGuardar = { nuevoMedico ->
                 viewModel.guardarMedico(
                     nuevoMedico,
-                    onSuccess = { showDialog = false },
+                    onSuccess = {
+                        showDialog = false
+                        viewModel.obtenerMedicos { medicos = it } // Recargar lista
+                    },
                     onError = { e -> Log.e("DoctorScreen", "Error al guardar médico: ${e.message}") }
                 )
             }

@@ -11,12 +11,12 @@ class CitaRepository {
 
     // Guardar una nueva cita
     suspend fun guardarCita(cita: Cita) {
-        if (cita.id == null) {
+        if (cita.id.isEmpty()) {
             val nuevaRef = citasRef.push()
-            cita.id = nuevaRef.key.toString()
+            cita.id = nuevaRef.key ?: ""
             nuevaRef.setValue(cita).await()
         } else {
-            citasRef.child(cita.id!!).setValue(cita).await()
+            citasRef.child(cita.id).setValue(cita).await()
         }
     }
 
@@ -39,9 +39,7 @@ class CitaRepository {
 
     // Actualizar una cita
     suspend fun actualizarCita(cita: Cita) {
-        cita.id?.let {
-            citasRef.child(it).setValue(cita).await()
-        }
+        citasRef.child(cita.id).setValue(cita).await()
     }
 
     // Eliminar una cita

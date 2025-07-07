@@ -8,12 +8,15 @@ import androidx.navigation.compose.composable
 import com.oscar.apihospitalfirebase.model.Medico
 import com.oscar.apihospitalfirebase.model.Paciente
 import com.oscar.apihospitalfirebase.screen.*
+import com.oscar.apihospitalfirebase.viewmodel.CitaViewModel
+import com.oscar.apihospitalfirebase.viewmodel.DiagnosticoViewModel
+import com.oscar.apihospitalfirebase.viewmodel.MedicoViewModel
+import com.oscar.apihospitalfirebase.viewmodel.PacienteViewModel
 import com.oscar.apihospitalfirebase.viewmodel.RecetaViewModel
 
 @Composable
 fun AppNavHost(
     navController: NavHostController,
-    startDestination: String = "pacientes",
     recetaViewModel: RecetaViewModel,
     pacientes: List<Paciente>,
     medicos: List<Medico>,
@@ -21,7 +24,8 @@ fun AppNavHost(
 ) {
     NavHost(
         navController = navController,
-        startDestination = startDestination
+        startDestination = "pacientes",
+        modifier = modifier
     ) {
         composable("pacientes") {
             PatientScreen()
@@ -37,7 +41,9 @@ fun AppNavHost(
         }
         composable("recetas") {
             PrescriptionScreen(
-                recetaViewModel = recetaViewModel
+                recetaViewModel = recetaViewModel,
+                pacientesExternos = pacientes,
+                medicosExternos = medicos
             )
         }
     }

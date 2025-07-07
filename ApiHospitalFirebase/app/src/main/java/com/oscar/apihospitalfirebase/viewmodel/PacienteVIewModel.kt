@@ -8,9 +8,10 @@ import com.oscar.apihospitalfirebase.repository.PacienteRepository
 import kotlinx.coroutines.launch
 
 class PacienteViewModel : ViewModel() {
+
     private val pacienteRepository = PacienteRepository()
 
-    // Guardar un paciente
+    // Guardar paciente
     fun guardarPaciente(
         paciente: Paciente,
         onSuccess: () -> Unit,
@@ -28,7 +29,7 @@ class PacienteViewModel : ViewModel() {
         }
     }
 
-    // Actualizar un paciente
+    // Actualizar paciente
     fun actualizarPaciente(
         paciente: Paciente,
         onSuccess: () -> Unit = {},
@@ -46,7 +47,7 @@ class PacienteViewModel : ViewModel() {
         }
     }
 
-    // Eliminar un paciente
+    // Eliminar paciente
     fun eliminarPaciente(
         id: String,
         onSuccess: () -> Unit = {},
@@ -77,7 +78,7 @@ class PacienteViewModel : ViewModel() {
         }
     }
 
-    // Obtener un paciente por ID
+    // Obtener paciente por ID
     fun obtenerPorId(id: String, onResult: (Paciente?) -> Unit) {
         viewModelScope.launch {
             try {

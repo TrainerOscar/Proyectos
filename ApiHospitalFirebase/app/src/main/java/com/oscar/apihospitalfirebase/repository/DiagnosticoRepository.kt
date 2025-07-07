@@ -11,7 +11,7 @@ class DiagnosticoRepository {
 
     // Guardar un nuevo diagnóstico
     suspend fun guardarDiagnostico(diagnostico: Diagnostico) {
-        if (diagnostico.id == null) {
+        if (diagnostico.id.isNullOrEmpty()) {
             val nuevaRef = diagnosticosRef.push()
             diagnostico.id = nuevaRef.key.toString()
             nuevaRef.setValue(diagnostico).await()

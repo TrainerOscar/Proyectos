@@ -8,9 +8,10 @@ import com.oscar.apihospitalfirebase.repository.MedicoRepository
 import kotlinx.coroutines.launch
 
 class MedicoViewModel : ViewModel() {
+
     private val medicoRepository = MedicoRepository()
 
-    // Guardar un médico
+    // Guardar médico
     fun guardarMedico(
         medico: Medico,
         onSuccess: () -> Unit,
@@ -41,7 +42,7 @@ class MedicoViewModel : ViewModel() {
         }
     }
 
-    // Obtener un médico por ID
+    // Obtener médico por ID
     fun obtenerPorId(id: String, onResult: (Medico?) -> Unit) {
         viewModelScope.launch {
             try {

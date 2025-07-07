@@ -31,10 +31,14 @@ fun AppointmentScreen(
     var pacientes by remember { mutableStateOf<List<Paciente>>(emptyList()) }
     var medicos by remember { mutableStateOf<List<Medico>>(emptyList()) }
 
-    LaunchedEffect(Unit) {
+    fun cargarDatos() {
         citaViewModel.obtenerCitas { citas = it }
         pacienteViewModel.obtenerPacientes { pacientes = it }
         medicoViewModel.obtenerMedicos { medicos = it }
+    }
+
+    LaunchedEffect(Unit) {
+        cargarDatos()
     }
 
     Scaffold(
@@ -77,7 +81,10 @@ fun AppointmentScreen(
             onGuardar = { nuevaCita ->
                 citaViewModel.guardarCita(
                     nuevaCita,
-                    onSuccess = { showDialog = false },
+                    onSuccess = {
+                        showDialog = false
+                        cargarDatos() // Recargar lista
+                    },
                     onError = { e -> Log.e("AppointmentScreen", "Error al guardar cita: ${e.message}") }
                 )
             }

@@ -11,12 +11,12 @@ class PacienteRepository {
 
     // Guardar un nuevo paciente
     suspend fun guardarPaciente(paciente: Paciente) {
-        if (paciente.id == null) {
+        if (paciente.id.isEmpty()) {
             val nuevaRef = pacientesRef.push()
-            paciente.id = nuevaRef.key.toString()
+            paciente.id = nuevaRef.key ?: ""
             nuevaRef.setValue(paciente).await()
         } else {
-            pacientesRef.child(paciente.id!!).setValue(paciente).await()
+            pacientesRef.child(paciente.id).setValue(paciente).await()
         }
     }
 
@@ -39,9 +39,7 @@ class PacienteRepository {
 
     // Actualizar un paciente
     suspend fun actualizarPaciente(paciente: Paciente) {
-        paciente.id?.let {
-            pacientesRef.child(it).setValue(paciente).await()
-        }
+        pacientesRef.child(paciente.id).setValue(paciente).await()
     }
 
     // Eliminar un paciente

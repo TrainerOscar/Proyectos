@@ -1,22 +1,22 @@
 package com.oscar.apihospitalfirebase.repository
 
-
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ktx.getValue
 import com.oscar.apihospitalfirebase.model.Receta
 import kotlinx.coroutines.tasks.await
 
-class  RecetaRepository {
+class RecetaRepository {
     private val db = FirebaseDatabase.getInstance()
     private val recetaRef = db.getReference("recetas")
 
     // Guardar una nueva receta
     suspend fun guardarReceta(receta: Receta) {
-        if (receta.id == null) {
+        if (receta.id.isEmpty()) {
             val nuevaRef = recetaRef.push()
-            receta.id = nuevaRef.key.toString()
+            receta.id = nuevaRef.key ?: ""
             nuevaRef.setValue(receta).await()
         } else {
-            recetaRef.child(receta.id!!).setValue(receta).await()
+            recetaRef.child(receta.id).setValue(receta).await()
         }
     }
 
@@ -39,9 +39,7 @@ class  RecetaRepository {
 
     // Actualizar una receta
     suspend fun actualizarReceta(receta: Receta) {
-        receta.id?.let {
-            recetaRef.child(it).setValue(receta).await()
-        }
+        recetaRef.child(receta.id).setValue(receta).await()
     }
 
     // Eliminar una receta
